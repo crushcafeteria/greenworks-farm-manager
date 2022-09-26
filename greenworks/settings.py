@@ -2,10 +2,9 @@ from pathlib import Path
 import os
 import environ
 
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+root = environ.Path(__file__) - 3  # get root of the project
+env = environ.Env()
+environ.Env.read_env()  # reading .env file
 
 # Set the project base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,11 +13,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # False if not in os.environ because of casting above
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
 
 # Raises Django's ImproperlyConfigured
 # exception if SECRET_KEY not in os.environ
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env.str('SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,11 +88,11 @@ WSGI_APPLICATION = 'greenworks.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : env('DB_NAME'),
-        'HOST'    : env('DB_HOST'),
-        'PORT'    : env('DB_PORT'),
-        'USER'    : env('DB_USER'),
-        'PASSWORD': env('DB_PASS'),
+        'NAME'    : env.str('DB_NAME'),
+        'HOST'    : env.str('DB_HOST'),
+        'PORT'    : env.str('DB_PORT'),
+        'USER'    : env.str('DB_USER'),
+        'PASSWORD': env.str('DB_PASS'),
     }
 }
 
@@ -155,14 +154,14 @@ DEBUG_TOOLBAR_CONFIG = {
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
-APP_NAME = 'Greenworks'
-APP_NAME_FOOTER = 'Greenworks Farm Manager'
+APP_NAME = env.str('APP_NAME')
+APP_NAME_FOOTER = env.str('APP_NAME_FOOTER')
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-WEATHER_ENDPOINT = 'http://dataservice.accuweather.com'
-WEATHER_API_KEY = '4ooYPXjMeUcoKhzJ0MfaRtzHFqNtXeWx'
-LOCATION_KEY = '226539'
+WEATHER_ENDPOINT = env.str('WEATHER_ENDPOINT')
+WEATHER_API_KEY = env.str('WEATHER_API_KEY')
+LOCATION_KEY = env.str('LOCATION_KEY')
 
 Q_CLUSTER = {
     'name'      : 'DjangoORM',
