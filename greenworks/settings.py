@@ -1,17 +1,30 @@
 from pathlib import Path
 import os
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# Set the project base directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# False if not in os.environ because of casting above
+DEBUG = env('DEBUG')
+
+# Raises Django's ImproperlyConfigured
+# exception if SECRET_KEY not in os.environ
+SECRET_KEY = env('SECRET_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0#sxtenn+&4^og%4809(3p@-)cm#dn#h*8!fbvn*5(398gm@10'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -73,15 +86,14 @@ WSGI_APPLICATION = 'greenworks.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : 'greenworks',
-        'HOST'    : '127.0.0.1',
-        'PORT'    : '3306',
-        'USER'    : 'root',
-        'PASSWORD': 'root',
+        'NAME'    : env('DB_NAME'),
+        'HOST'    : env('DB_HOST'),
+        'PORT'    : env('DB_PORT'),
+        'USER'    : env('DB_USER'),
+        'PASSWORD': env('DB_PASS'),
     }
 }
 
