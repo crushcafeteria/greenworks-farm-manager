@@ -1,0 +1,13 @@
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% if next %}
+    <div class="alert alert-warning text-center">
+        You cannot access that page
+    </div>
+{% endif %}

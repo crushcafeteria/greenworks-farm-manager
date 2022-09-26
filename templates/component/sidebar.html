@@ -1,0 +1,35 @@
+<nav id="sidebar" class="sidebar js-sidebar">
+    <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="{% url 'dashboard' %}">
+            <span class="align-middle">
+                <i class="fa fa-seedling fa-fw"></i> {{ APP_NAME }}
+            </span>
+        </a>
+
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="{% url 'dashboard' %}">
+                    <i class="fa fa-home fa-fw"></i> <span class="align-middle">Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-header">Financials</li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="{% url 'list_expenses' %}">
+                    <i class="fa fa-money-bill fa-fw"></i> <span class="align-middle">Expenses</span>
+                </a>
+            </li>
+
+            <li class="sidebar-header">Weather</li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="{% url 'weather_list' %}">
+                    <i class="fa fa-cloud-rain fa-fw"></i> <span class="align-middle">Weather Databank</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="{% url 'weather_fetch' %}">
+                    <i class="fa fa-money-bill fa-fw"></i> <span class="align-middle">Fetch weather</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

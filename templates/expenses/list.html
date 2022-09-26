@@ -1,0 +1,166 @@
+{% extends 'layout/master.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <div class="row row-cols-lg-2">
+        <div class="col-8">
+            <h1 class="h3 mb-3">
+                <i class="fa fa-money-bill fa-fw"></i> Farm Expenses Tracker
+            </h1>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col">
+                    <a href="{% url 'expense_create' %}" class="btn btn-success float-end btn-sm">
+                        <i class="fa fa-plus-circle fa-fw"></i> Add New
+                    </a>
+                </div>
+                <div class="col d-none d-lg-block">
+                    <form action="{% url 'list_expenses' %}" method="get">
+                        <input type="text" name="q" class="form-control form-control-sm float-end" placeholder="Search"
+                               value="{{ q }}">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'list_expenses' %}" method="get">
+        <div class="row row-cols-2 d-block d-lg-none mb-4">
+            <div class="col-12 mb-3">
+                <input type="text" name="q" class="form-control form-control" placeholder="Search for an expense"
+                       value="{{ q }}">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fa fa-search fa-fw"></i> Search
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="w-100">
+            <div class="row">
+                <div class="col-12 col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col my-0">
+                                    <h5 class="card-title">Total Expenses</h5>
+                                </div>
+
+                                <div class="col-auto">
+                                    <div class="stat text-primary">
+                                        <i class="fa fa-money-bill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <h1 class="mb-3">Ksh {{ total|intcomma }}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 text-center">
+            {% include 'component/messages.html' %}
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {% if expenses %}
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Expense Name</th>
+                                <th>Amount</th>
+                                <th>When</th>
+                                <th colspan="2">Category</th>
+                            </tr>
+                            {% for expense in expenses %}
+                                <tr>
+                                    <td>{{ expense.name }}</td>
+                                    <td>Ksh {{ expense.amount|intcomma }}</td>
+                                    <td>{{ expense.when }}</td>
+                                    <td>{{ expense.type }}</td>
+                                    <td>
+                                        <div class="btn btn-group float-end">
+                                            <a href="{% url 'view_expense' id=expense.id %}"
+                                               class="btn btn-outline-primary btn-sm">
+                                                <i class="fa fa-info-circle fa-fw"></i> Details
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+                        <nav>
+                        <span class="float-end pt-3">
+                            Found {{ expenses.paginator.count }} rows
+                        </span>
+                            <ul class="pagination">
+                                {% if expenses.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ expenses.previous_page_number }}">
+                                            <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% if expenses.number|add:'-4' > 1 %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ expenses.number|add:'-5' }}">
+                                            &hellip;
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in expenses.paginator.page_range %}
+                                    {% if expenses.number == i %}
+                                        <li class="page-item active">
+                                            <a class="page-link" href="#">
+                                                {{ i }} <span class="sr-only">(current)</span>
+                                            </a>
+                                        </li>
+                                    {% elif i > expenses.number|add:'-5' and i < expenses.number|add:'5' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if expenses.paginator.num_pages > expenses.number|add:'4' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ expenses.number|add:'5' }}">&hellip;</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if expenses.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ expenses.next_page_number }}">
+                                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+
+                    {% else %}
+                        <h3 class="text-warning text-center">
+                            <i class="fa fa-face-frown-open fa-2x"></i>
+                            <br>
+                            <br>
+                            You have not recorded any expenses
+                        </h3>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

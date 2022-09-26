@@ -1,0 +1,122 @@
+{% extends 'layout/master.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="h3 mb-3">
+                <i class="fa fa-cloud-rain fa-fw"></i> Weather Databank
+            </h1>
+        </div>
+        <div class="col-lg-4">
+            <div class="row">
+                <div class="col">
+                    <a href="{% url 'weather_fetch' %}" class="btn btn-primary float-end btn-sm">
+                        <i class="fa fa-refresh fa-fw"></i> Fetch Data
+                    </a>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control form-control-sm float-end" placeholder="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Description</th>
+                            <th>Temp</th>
+                            <th>Temp Range</th>
+                            <th>Relative Humidity</th>
+                            <th>Wind Direction</th>
+                            <th>Wind Speed</th>
+                            <th>UV Index</th>
+                            <th>Cloud Cover</th>
+                            <th>Cloud Ceiling</th>
+                            <th colspan="2">12 Hr Precipitation</th>
+                        </tr>
+                        {% for data in weather %}
+                            <tr>
+                                <td>{{ data.observation_timestamp }}</td>
+                                <td>{{ data.description }}</td>
+                                <td>{{ data.temperature }}℃</td>
+                                <td>{{ data.range_24_hr_temp }}℃</td>
+                                <td>{{ data.relative_humidity }}</td>
+                                <td>{{ data.wind_direction }}</td>
+                                <td>{{ data.wind_speed }}</td>
+                                <td>{{ data.uv_index }}</td>
+                                <td>{{ data.cloud_cover }}%</td>
+                                <td>{{ data.cloud_ceiling }} mtr</td>
+                                <td>{{ data.precipitation_12_hr }}mm</td>
+                                <td>
+                                    <a href="#"
+                                       class="btn btn-outline-primary btn-sm float-end">
+                                        <i class="fa fa-info-circle fa-fw"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                    <nav>
+                        <span class="float-end pt-3">
+                            Found {{ weather.paginator.count }} rows
+                        </span>
+                        <ul class="pagination">
+                            {% if weather.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ weather.previous_page_number }}">
+                                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if weather.number|add:'-4' > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ weather.number|add:'-5' }}">
+                                        &hellip;
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for i in weather.paginator.page_range %}
+                                {% if weather.number == i %}
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#">
+                                            {{ i }} <span class="sr-only">(current)</span>
+                                        </a>
+                                    </li>
+                                {% elif i > weather.number|add:'-5' and i < weather.number|add:'5' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if weather.paginator.num_pages > weather.number|add:'4' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ weather.number|add:'5' }}">&hellip;</a>
+                                </li>
+                            {% endif %}
+
+                            {% if weather.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ weather.next_page_number }}">
+                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
