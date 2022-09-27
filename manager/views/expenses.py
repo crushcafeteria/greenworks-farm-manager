@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.db.models import Sum, Q
 from django.forms.models import model_to_dict
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 
 # Web form
@@ -26,6 +27,7 @@ class ExpenseForm(forms.ModelForm):
 
 
 @csrf_exempt
+@login_required
 def list(request):
     q = request.GET.get('q', '')
     if q == '':
@@ -41,14 +43,14 @@ def list(request):
     }
     return render(request, 'expenses/list.html', context=context)
 
-
+@login_required
 def view(request, id):
     context = {
         'expense': Expense.objects.get(id=id)
     }
     return render(request, 'expenses/view.html', context=context)
 
-
+@login_required
 def create(request):
     form = ExpenseForm()
 
@@ -67,7 +69,7 @@ def create(request):
 
     return render(request, 'expenses/create.html', context)
 
-
+@login_required
 def update(request, id):
     form = ExpenseForm(model_to_dict(Expense.objects.get(pk=id)))
     if request.POST:

@@ -15,7 +15,7 @@
                    href="#"
                    data-bs-toggle="dropdown">
                     <img src="{% static '/img/avatar.png' %}" class="avatar img-fluid rounded me-1"/>
-                    <span class="text-dark">Charles Hall</span>
+                    <span class="text-dark">{{ user.first_name }} {{ user.last_name }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="#!">

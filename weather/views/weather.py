@@ -18,6 +18,7 @@ def list(request):
     weather = WeatherData.objects.all()
     paginator = Paginator(weather, 10)
     context = {
-        'weather': paginator.get_page(request.GET.get('page'))
+        'weather': paginator.get_page(request.GET.get('page')),
+        'current': weather.first()
     }
     return render(request, 'weather/list.html', context=context)

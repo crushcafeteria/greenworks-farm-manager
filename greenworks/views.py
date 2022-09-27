@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from weather.models import WeatherData
+from django.contrib.auth.decorators import login_required
 
 
 def register(request):
@@ -17,5 +18,9 @@ def register(request):
     context = {'form': form}
     return render(request, 'registration/register.html', context)
 
+@login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    context = {
+        'current_weather': WeatherData.objects.order_by('-id').first()
+    }
+    return render(request, 'dashboard.html', context)
