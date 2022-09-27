@@ -1,4 +1,205 @@
 {% extends 'layout/master.html' %}
 
 {% block content %}
+
+    <h1 class="text-muted mb-4">Shortcuts</h1>
+    <div class="row">
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <a href="{% url 'expense_create' %}">
+                    <div class="card-body text-center">
+                        <h1 class="mb-3">
+                            <i class="fa fa-money-bill fa-2x"></i>
+                            <br>
+                            Record Expense
+                        </h1>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <a href="#">
+                    <div class="card-body text-center">
+                        <h1 class="mb-3">
+                            <i class="fa fa-shopping-bag fa-2x"></i>
+                            <br>
+                            Record Sale
+                        </h1>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <h1 class="text-muted mb-4">Current Weather</h1>
+    <div class="row">
+        {# Weather description #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Current Weather</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">{{ current_weather.description }}</h1>
+                </div>
+            </div>
+        </div>
+
+        {# 12 hour precipitation #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Rain in the last 12 hours</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-cloud-rain"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">{{ current_weather.precipitation_12_hr }} mm</h1>
+                </div>
+            </div>
+        </div>
+
+        {# Temperature #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Current Temperature</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-thermometer-three-quarters"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">{{ current_weather.temperature }} <sup>o</sup>C</h1>
+                </div>
+            </div>
+        </div>
+
+        {# Relative humidity #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Relative Humidity</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-droplet"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">{{ current_weather.relative_humidity }}%</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <h1 class="text-muted mb-4">Financial Summaries</h1>
+    <div class="row">
+        {# Sales this month #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Sales this month</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-thermometer-three-quarters"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">0</h1>
+                </div>
+            </div>
+        </div>
+
+        {# Total sales #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Total Sales</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-droplet"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">0</h1>
+                </div>
+            </div>
+        </div>
+
+        {# Month expenses #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Expenses this month</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-eye"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">0</h1>
+                </div>
+            </div>
+        </div>
+
+        {# Total Expenses #}
+        <div class="col-6 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Total Expenses</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fa fa-cloud-rain"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mb-3">0</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    {# Rainfall trends #}
+    <h1 class="text-muted mb-4">Rainfall Trends</h1>
+
+    {# Temperature trends #}
+    <h1 class="text-muted mb-4">Temperature Trends</h1>
+
+    {# RH trends #}
+    <h1 class="text-muted mb-4">Humidity Trends</h1>
+
 {% endblock content %}
