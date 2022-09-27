@@ -165,6 +165,8 @@ WEATHER_ENDPOINT = env.str('WEATHER_ENDPOINT')
 WEATHER_API_KEY = env.str('WEATHER_API_KEY')
 LOCATION_KEY = env.str('LOCATION_KEY')
 
+CSRF_TRUSTED_ORIGINS = ['https://greenworks.sodium.co.ke']
+
 Q_CLUSTER = {
     'name'      : 'DjangoORM',
     'timeout'   : 1200,  # Timeout in secs for a task
