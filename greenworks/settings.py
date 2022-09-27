@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['.sodium.co.ke','localhost','127.0.0.1','45.79.236.53']
 # Application definition
 
 INSTALLED_APPS = [
+    'greenworks',
     'manager.apps.ManagerConfig',
     'weather.apps.WeatherConfig',
     # 'grappelli',
