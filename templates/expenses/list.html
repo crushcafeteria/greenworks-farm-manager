@@ -101,6 +101,7 @@
                                 <i class="fa fa-calendar fa-fw"></i> {{ expense.when }}
                             </h6>
                             <h6 class="text-primary">Ksh {{ expense.amount|intcomma }}</h6>
+                            <hr>
                             <p class="card-text">
                                 {{ expense.description|truncatechars:150 }}
                             </p>
