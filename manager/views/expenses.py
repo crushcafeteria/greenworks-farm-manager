@@ -15,15 +15,7 @@ class DateInput(forms.DateInput):
     input_type = 'date'
 
 
-class ExpenseForm(forms.ModelForm):
-    name = forms.CharField(label='Expense Name', required=True)
-    when = forms.DateField(label='Date', required=True, widget=forms.DateInput(attrs={'type': 'date'}))
-    description = forms.CharField(widget=forms.Textarea)
-    amount = forms.FloatField(label='Amount', required=True)
 
-    class Meta:
-        model = Expense
-        fields = ['name', 'type', 'when', 'description', 'amount']
 
 
 @csrf_exempt

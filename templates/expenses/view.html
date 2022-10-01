@@ -1,9 +1,13 @@
 {% extends 'layout/master.html' %}
+{% load humanize %}
+
+{% block title %}
+    Expense Details - {{ expense.name }}
+{% endblock %}
 
 {% block content %}
-
     <div class="btn btn-group float-end">
-        <a href="{% url 'list_expenses' %}" class="btn btn-warning float-end btn-sm">
+        <a href="{% url 'expenses_list' %}" class="btn btn-warning float-end btn-sm">
             <i class="fa fa-caret-left fa-fw"></i> Go Back
         </a>
     </div>
@@ -24,10 +28,10 @@
                         </div>
                         <div class="col">
                             <label>Amount</label>
-                            <h4>Ksh {{ expense.amount_formatted }}</h4>
+                            <h4>Ksh {{ expense.amount|intcomma }}</h4>
                         </div>
                         <div class="col">
-                            <label>When</label>
+                            <label>Date</label>
                             <h4>{{ expense.when }}</h4>
                         </div>
                     </div>
@@ -37,18 +41,17 @@
                     </div>
                     <br>
 
-                    <a href="{% url 'delete_expense' id=expense.id %}" class="btn btn-outline-danger float-end btn-sm"
-                       onclick="return confirm('Are you sure? This action cannot be undone')">
+                    <a href="{% url 'expenses_delete' pk=expense.id %}" class="btn btn-outline-danger float-end btn-sm">
                         <i class="fa fa-trash fa-fw"></i> Delete
                     </a>
-                    <a href="{% url 'edit_expense' id=expense.id %}"
+                    <a href="{% url 'expenses_update' pk=expense.id %}"
                        class="btn btn-primary btn-sm">
                         <i class="fa fa-edit fa-fw"></i> Edit
                     </a>
                 </div>
             </div>
             <p class="text-muted">
-                Recorded by {{ expense.author__set.first_name }}
+                Recorded by {{ expense.author.first_name }} {{ expense.author.last_name }} on {{ expense.created_at }}
             </p>
         </div>
     </div>

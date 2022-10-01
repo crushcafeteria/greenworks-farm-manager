@@ -1,0 +1,198 @@
+{% extends 'layout/master.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <div class="row row-cols-lg-2">
+        <div class="col-8">
+            <h1 class="h3 mb-3">
+                <i class="fa fa-shopping-bag fa-fw"></i> Sales Records
+            </h1>
+        </div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col">
+                    <a href="{% url 'sales_create' %}" class="btn btn-success float-end btn-sm">
+                        <i class="fa fa-plus-circle fa-fw"></i> Add New
+                    </a>
+                </div>
+                <div class="col d-none d-lg-block">
+                    <form action="{% url 'sales_list' %}" method="get">
+                        <input type="text" name="q" class="form-control form-control-sm float-end" placeholder="Search"
+                               value="{{ q }}">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="{% url 'sales_list' %}" method="get">
+        <div class="row row-cols-2 d-block d-lg-none mb-4">
+            <div class="col-12 mb-3">
+                <input type="text" name="q" class="form-control" placeholder="Find a sale" value="{{ q }}">
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fa fa-search fa-fw"></i> Search
+                </button>
+            </div>
+        </div>
+    </form>
+
+    {# Summary widgets #}
+    <div class="row">
+        <div class="col-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Sales this month</h5>
+                        </div>
+                    </div>
+                    <h3 class="mb-3">Ksh {{ month_sales|intcomma }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col my-0">
+                            <h5 class="card-title">Total Sales</h5>
+                        </div>
+                    </div>
+                    <h3 class="mb-3">Ksh {{ total_sales|intcomma }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            {% include 'component/messages.html' %}
+        </div>
+
+        {# Desktop view #}
+        <div class="col-12 d-none d-lg-block">
+            <div class="card">
+                <div class="card-body">
+                    {% if sales %}
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Amount</th>
+                                <th colspan="2">Quantity</th>
+                            </tr>
+                            {% for sale in sales %}
+                                <tr>
+                                    <td>{{ sale.date }}</td>
+                                    <td>{{ sale.product.name }}</td>
+                                    <td>Ksh {{ sale.amount|intcomma }}</td>
+                                    <td>{{ sale.quantity }} kgs</td>
+                                    <td>
+                                        <div class="btn btn-group float-end">
+                                            <a href="{% url 'sales_details' pk=sale.id %}"
+                                               class="btn btn-outline-primary btn-sm">
+                                                <i class="fa fa-info-circle fa-fw"></i> Details
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <h3 class="text-warning text-center">
+                            <i class="fa fa-face-frown-open fa-2x"></i>
+                            <br>
+                            <br>
+                            You have not recorded any expenses
+                        </h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Mobile view #}
+        {% for sale in sales %}
+            <div class="col-12 d-block d-lg-none">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="text-muted float-end">
+                            {{ sale.quantity }} KG
+                        </h6>
+                        <h4 class="mb-2">
+                            <i class="fa fa-shopping-bag fa-fw"></i> {{ sale.product.name }}
+                        </h4>
+                        <h6 class="text-muted float-end">
+                            <i class="fa fa-calendar fa-fw"></i> {{ sale.date }}
+                        </h6>
+                        <h6 class="text-primary">Ksh {{ sale.amount|intcomma }}</h6>
+                        <p class="card-text">
+                            {{ sale.description|truncatechars:150 }}
+                        </p>
+                        <a href="{% url 'sales_details' pk=sale.id %}"
+                           class="btn btn-outline-primary">
+                            <i class="fa fa-info-circle fa-fw"></i> Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {# Pagination #}
+        {% if expenses %}
+            <nav>
+                <div class="float-end pt-3">
+                    Found {{ expenses.paginator.count }} rows
+                </div>
+                <ul class="pagination">
+                    {% if expenses.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ expenses.previous_page_number }}">
+                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if expenses.number|add:'-4' > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ expenses.number|add:'-5' }}">
+                                &hellip;
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in expenses.paginator.page_range %}
+                        {% if expenses.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link" href="#">
+                                    {{ i }} <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                        {% elif i > expenses.number|add:'-5' and i < expenses.number|add:'5' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if expenses.paginator.num_pages > expenses.number|add:'4' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ expenses.number|add:'5' }}">&hellip;</a>
+                        </li>
+                    {% endif %}
+
+                    {% if expenses.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ expenses.next_page_number }}">
+                                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+
+{% endblock content %}

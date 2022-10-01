@@ -31,9 +31,11 @@ ALLOWED_HOSTS = ['greenworks.sodium.co.ke', 'localhost', '127.0.0.1', '45.79.236
 
 INSTALLED_APPS = [
     'greenworks',
-    'manager.apps.ManagerConfig',
+    # 'manager.apps.ManagerConfig',
     'weather.apps.WeatherConfig',
-    # 'grappelli',
+    'sales.apps.SalesConfig',
+    'expenses.apps.ExpensesConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

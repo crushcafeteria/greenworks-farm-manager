@@ -1,0 +1,60 @@
+{% extends 'layout/master.html' %}
+
+{% block content %}
+
+    <div class="btn btn-group float-end">
+        <a href="{% url 'sales_list' %}" class="btn btn-warning float-end btn-sm">
+            <i class="fa fa-caret-left fa-fw"></i> Go Back
+        </a>
+    </div>
+    <h1 class="h3 mb-3">
+        <i class="fa fa-eye fa-fw"></i> Sale Details
+    </h1>
+
+    <br>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row row-cols-1 row-cols-lg-3 gb-5">
+                        <div class="col">
+                            <label>Product Name</label>
+                            <h4>{{ object.product.name }}</h4>
+                        </div>
+                        <div class="col">
+                            <label>Quantity</label>
+                            <h4>{{ object.quantity }}</h4>
+                        </div>
+                        <div class="col">
+                            <label>Amount</label>
+                            <h4>Ksh {{ object.amount }}</h4>
+                        </div>
+                        <div class="col">
+                            <label>Date</label>
+                            <h4>{{ object.date }}</h4>
+                        </div>
+                    </div>
+                    <div class="col pt-2">
+                        <label>Description</label>
+                        <h4>{{ object.description }}</h4>
+                    </div>
+                    <br>
+
+{#                    <a href="{% url 'delete_sale' id=object.id %}" class="btn btn-outline-danger float-end btn-sm"#}
+{#                       onclick="return confirm('Are you sure? This action cannot be undone')">#}
+{#                        <i class="fa fa-trash fa-fw"></i> Delete#}
+{#                    </a>#}
+{#                    <a href="{% url 'edit_sale' id=object.id %}"#}
+{#                       class="btn btn-primary btn-sm">#}
+{#                        <i class="fa fa-edit fa-fw"></i> Edit#}
+{#                    </a>#}
+                </div>
+            </div>
+            <p class="text-muted">
+                Recorded by {{ object.author__set.first_name }}
+            </p>
+        </div>
+    </div>
+
+{% endblock content %}
