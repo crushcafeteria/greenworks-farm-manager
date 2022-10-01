@@ -23,3 +23,8 @@ python manage.py loaddata [fixture_name]
 ```
 python manage.py qcluster
 ```
+
+## Run production server (Gunicorn)
+```
+gunicorn greenworks.wsgi:application --bind=0.0.0.0:9000
+```

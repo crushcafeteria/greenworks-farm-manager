@@ -176,3 +176,5 @@ Q_CLUSTER = {
     'catch_up'  : False,  # Ignore un-run scheduled tasks
     'orm'       : 'default'  # Django database connection
 }
+
+USE_THOUSAND_SEPARATOR = True
