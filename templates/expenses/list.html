@@ -115,15 +115,15 @@
 
             {# Pagination #}
             <div class="col-12">
+                <div class="current pb-3">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </div>
                 <div class="step-links">
                     {% if page_obj.has_previous %}
                         <a class="btn btn-outline-primary" href="?page=1&q={{ q }}">&laquo; first</a>
-                        <a class="btn btn-primary" href="?page={{ page_obj.previous_page_number }}&q={{ q }}">previous</a>
+                        <a class="btn btn-primary"
+                           href="?page={{ page_obj.previous_page_number }}&q={{ q }}">previous</a>
                     {% endif %}
-
-                    <div class="current float-end pt-2">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                    </div>
 
                     {% if page_obj.has_next %}
                         <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}&q={{ q }}">next</a>
