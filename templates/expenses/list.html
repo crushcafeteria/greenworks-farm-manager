@@ -117,8 +117,8 @@
             <div class="col-12">
                 <div class="step-links">
                     {% if page_obj.has_previous %}
-                        <a class="btn btn-outline-primary" href="?page=1">&laquo; first</a>
-                        <a class="btn btn-outline-primary" href="?page={{ page_obj.previous_page_number }}">previous</a>
+                        <a class="btn btn-outline-primary" href="?page=1&q={{ q }}">&laquo; first</a>
+                        <a class="btn btn-outline-primary" href="?page={{ page_obj.previous_page_number }}&q={{ q }}">previous</a>
                     {% endif %}
 
                     <div class="current float-end pt-2">
@@ -126,8 +126,8 @@
                     </div>
 
                     {% if page_obj.has_next %}
-                        <a class="btn btn-outline-primary" href="?page={{ page_obj.next_page_number }}">next</a>
-                        <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}">last
+                        <a class="btn btn-outline-primary" href="?page={{ page_obj.next_page_number }}&q={{ q }}">next</a>
+                        <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}">last
                             &raquo;</a>
                     {% endif %}
                 </div>

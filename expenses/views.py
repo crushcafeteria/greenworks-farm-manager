@@ -11,7 +11,7 @@ from django.core.paginator import Paginator
 class ExpensesListView(LoginRequiredMixin, ListView):
     template_name = 'expenses/list.html'
     context_object_name = 'expenses'
-    paginate_by = 4
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
