@@ -16,9 +16,8 @@ class ExpensesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         month = datetime.datetime.now().month
-        context['month_expenses'] = 'Ksh ' + str(
-            Expenses.objects.filter(when__month=month).aggregate(Sum('amount'))['amount__sum'])
-        context['total_expenses'] = 'Ksh ' + str(Expenses.objects.aggregate(Sum('amount'))['amount__sum'])
+        context['month_expenses'] = Expenses.objects.filter(when__month=month).aggregate(Sum('amount'))['amount__sum']
+        context['total_expenses'] = Expenses.objects.aggregate(Sum('amount'))['amount__sum']
         context['q'] = self.request.GET.get('q', '')
         return context
 
