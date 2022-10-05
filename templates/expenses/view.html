@@ -16,6 +16,12 @@
     </h1>
 
     <br>
+    {# Messages #}
+    {% if expense.valid == 'NO' %}
+        {% include 'component/alertbox.html' with color='warning' message='This expense has not been validated' %}
+    {% endif %}
+
+    {% include 'component/session-messages.html' %}
 
     <div class="row">
         <div class="col-12">
@@ -34,6 +40,10 @@
                             <label>Date</label>
                             <h4>{{ expense.when }}</h4>
                         </div>
+                        <div class="col">
+                            <label>Validated</label>
+                            <h4>{{ expense.valid }}</h4>
+                        </div>
                     </div>
                     <div class="col pt-2">
                         <label>Description</label>
@@ -48,6 +58,12 @@
                        class="btn btn-primary btn-sm">
                         <i class="fa fa-edit fa-fw"></i> Edit
                     </a>
+                    {% if expense.valid == 'NO' %}
+                        <a href="{% url 'expenses_validate' pk=expense.id %}" class="btn btn-success float-end btn-sm">
+                            <i class="fa fa-check-circle fa-fw"></i> Validate
+                        </a>
+                    {% endif %}
+
                 </div>
             </div>
             <p class="text-muted">

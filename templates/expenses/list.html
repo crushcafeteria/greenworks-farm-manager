@@ -27,29 +27,45 @@
     {# Summary widgets #}
     <div class="row mb-3">
         <div class="col-6 col-lg-4">
-            {% include 'component/statistic.html' with label='Total Expenses' value=total_expenses %}
+            {% include 'component/statistic.html' with label='This Month' value=month_expenses %}
         </div>
         <div class="col-6 col-lg-4">
-            {% include 'component/statistic.html' with label='This Month' value=month_expenses %}
+            {% include 'component/statistic.html' with label='Total Expenses' value=total_expenses %}
         </div>
     </div>
 
-    {#Search#}
+    {#Search & filters#}
     <form action="{% url 'expenses_list' %}" method="get" class="mb-4">
-        <div class="row row-cols-2 mb-4">
-            <div class="col-7 col-lg-4">
-                <input type="text" name="q" class="form-control" placeholder="Search then Enter" value="{{ q }}">
+        <div class="row row-cols-1 row-cols-lg-4 gy-3 mb-4">
+            <div class="col">
+                <input type="text" name="q" class="form-control"
+                       placeholder="Search then Enter" value="{{ request.GET.q }}">
             </div>
-            <div class="col-5 col-lg-4">
-                {% if q %}
-                    <a href="{% url 'expenses_list' %}" class="btn btn-link text-warning">
-                        <i class="fa fa-times-circle fa-fw"></i> Clear search filters
-                    </a>
-                {% else %}
-                    <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="fa fa-search fa-fw"></i> Search
-                    </button>
-                {% endif %}
+            <div class="col">
+                <select name="valid" class="form-control">
+                    <option value="">Any validation type</option>
+                    <option value="YES" {% if request.GET.valid == 'YES' %} selected {% endif %}>
+                        Validated Only
+                    </option>
+                    <option value="NO" {% if request.GET.valid == 'NO' %} selected {% endif %}>
+                        Pending Only
+                    </option>
+                </select>
+            </div>
+            <div class="col">
+                <select name="type" class="form-control">
+                    <option value="">All categories</option>
+                    {% for key, value in types %}
+                        <option value="{{ key }}" {% if request.GET.type == key %} selected {% endif %}>
+                            {{ value }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="fa fa-search fa-fw"></i> Search
+                </button>
             </div>
         </div>
     </form>
@@ -62,11 +78,12 @@
         {% if expenses %}
             {# Desktop view #}
             <div class="col-12 d-none d-lg-block">
-                <table class="table table-bordered bg-white table-hover">
+                <table class="table table-bordered table-sm bg-white table-hover">
                     <tr>
                         <th>Expense Name</th>
                         <th>Amount</th>
                         <th>When</th>
+                        <th>Status</th>
                         <th colspan="2">Category</th>
                     </tr>
                     {% for expense in expenses %}
@@ -74,12 +91,28 @@
                             <td>{{ expense.name }}</td>
                             <td>Ksh {{ expense.amount|intcomma }}</td>
                             <td>{{ expense.when }}</td>
+                            <td>
+                                {% if expense.valid == 'YES' %}
+                                    <div class="text-success">
+                                        <i class="fa fa-check-circle fa-fw"></i> Valid
+                                    </div>
+                                {% else %}
+                                    <div class="text-warning">
+                                        <i class="fa fa-exclamation-triangle fa-fw"></i> Pending Validation
+                                    </div>
+                                {% endif %}
+
+                            </td>
                             <td>{{ expense.type }}</td>
                             <td>
                                 <div class="btn btn-group float-end">
                                     <a href="{% url 'expenses_details' pk=expense.id %}"
                                        class="btn btn-outline-primary btn-sm">
                                         <i class="fa fa-info-circle fa-fw"></i> Details
+                                    </a>
+                                    <a href="{% url 'expenses_validate' pk=expense.id %}"
+                                       class="btn btn-outline-success btn-sm">
+                                        <i class="fa fa-check-circle fa-fw"></i> Validate
                                     </a>
                                 </div>
                             </td>
@@ -105,6 +138,17 @@
                             <p class="card-text">
                                 {{ expense.description|truncatechars:150|linebreaks }}
                             </p>
+
+                            {% if expense.valid == 'YES' %}
+                                <span class="text-success float-end pt-2">
+                                    <i class="fa fa-check-circle fa-fw"></i> Valid
+                                </span>
+                            {% else %}
+                                <span class="text-warning float-end pt-2">
+                                    <i class="fa fa-exclamation-triangle fa-fw"></i> Pending Validation
+                                </span>
+                            {% endif %}
+
                             <a href="{% url 'expenses_details' pk=expense.id %}"
                                class="btn btn-outline-primary">
                                 <i class="fa fa-info-circle fa-fw"></i> Details
@@ -116,19 +160,19 @@
 
             {# Pagination #}
             <div class="col-12">
-                <div class="current pb-3">
+                <div class="current pb-3 text-center">
                     Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                 </div>
-                <div class="step-links">
+                <div class="text-center mb-2">
                     {% if page_obj.has_previous %}
-                        <a class="btn btn-outline-primary" href="?page=1&q={{ q }}">&laquo; first</a>
+                        <a class="btn btn-outline-primary" href="?page=1&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">&laquo; first</a>
                         <a class="btn btn-primary"
-                           href="?page={{ page_obj.previous_page_number }}&q={{ q }}">previous</a>
+                           href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">previous</a>
                     {% endif %}
 
                     {% if page_obj.has_next %}
-                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}&q={{ q }}">next</a>
-                        <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}&q={{ q }}">last
+                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">next</a>
+                        <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">last
                             &raquo;</a>
                     {% endif %}
                 </div>

@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('amount', models.FloatField(verbose_name='Amount')),
                 ('quantity', models.FloatField(verbose_name='Quantity (in kg)')),
                 ('description', models.TextField(verbose_name='Description')),
-                ('author_id', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Recorded By')),
+                ('author', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Recorded By')),
             ],
             options={
                 'verbose_name': 'Sale',

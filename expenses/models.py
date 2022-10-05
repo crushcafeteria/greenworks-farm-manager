@@ -14,6 +14,11 @@ class Expenses(models.Model):
         ('INPUTS', 'Farm Inputs (Fertilizer, pesticides e.t.c'),
     ]
 
+    VALIDATION = [
+        ('YES', 'Yes'),
+        ('NO', 'No'),
+    ]
+
     name = models.CharField('Expense Name', max_length=100)
     type = models.CharField('Category', max_length=100, choices=EXPENSE_TYPES, default='OTHER')
     when = models.DateField('Date of expenditure')
@@ -22,6 +27,8 @@ class Expenses(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Recorded By')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    valid = models.CharField('Is Valid?', max_length=100, choices=EXPENSE_TYPES, default='NO')
+
 
     def __str__(self):
         return self.name

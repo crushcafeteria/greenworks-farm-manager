@@ -5,7 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from expenses.forms import ExpenseForm
 import datetime
 from django.db.models import Sum, Q
-from django.core.paginator import Paginator
+from django.shortcuts import redirect
+from django.contrib import messages
 
 
 class ExpensesListView(LoginRequiredMixin, ListView):
@@ -16,18 +17,29 @@ class ExpensesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         month = datetime.datetime.now().month
+
         context['month_expenses'] = Expenses.objects.filter(when__month=month).aggregate(Sum('amount'))['amount__sum']
         context['total_expenses'] = Expenses.objects.aggregate(Sum('amount'))['amount__sum']
+
         context['q'] = self.request.GET.get('q', '')
+        context['types'] = Expenses.EXPENSE_TYPES
+
         return context
 
     def get_queryset(self):
-        q = self.request.GET.get('q', None)
-        if q is not None:
-            q = self.request.GET['q']
-            queryset = Expenses.objects.filter(Q(name__icontains=q) | Q(description__icontains=q))
-        else:
-            queryset = Expenses.objects.all()
+        queryset = Expenses.objects.all()
+
+        # Search keywords
+        if self.request.GET.get('q'):
+            q = self.request.GET.get('q')
+            queryset = queryset.filter(Q(name__icontains=q) | Q(description__icontains=q))
+
+        # Filter by validation
+        if self.request.GET.get('valid'):
+            queryset = queryset.filter(valid__exact=self.request.GET.get('valid'))
+
+        if self.request.GET.get('type'):
+            queryset = queryset.filter(type__exact=self.request.GET.get('type'))
 
         queryset = queryset.order_by('-when')
         return queryset
@@ -47,6 +59,7 @@ class ExpenseDetailView(LoginRequiredMixin, DetailView):
     model = Expenses
     template_name = 'expenses/view.html'
     context_object_name = 'expense'
+    fields = ['id', 'name', 'when', 'description', 'type', 'amount', 'author', 'valid']
 
 
 class ExpensesDeleteView(DeleteView):
@@ -64,3 +77,19 @@ class ExpensesUpdateView(UpdateView):
         context = super(ExpensesUpdateView, self).get_context_data()
         context['editing'] = True
         return context
+
+
+class ValidateExpense(UpdateView):
+    template_name = 'expenses/validate.html'
+    context_object_name = 'expense'
+    model = Expenses
+    fields = ['id', 'name', 'when', 'description', 'type', 'amount', 'author']
+    success_url = '/test'
+
+    # Form will always be invalid. Intercept request here to validate expense
+    def form_invalid(self, form):
+        pk = self.kwargs['pk']
+        expense = Expenses.objects.filter(pk=pk)
+        expense.update(valid='YES')
+        messages.success(self.request, 'You have validated this expense')
+        return redirect('expenses_details', pk=pk)

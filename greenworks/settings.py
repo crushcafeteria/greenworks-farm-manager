@@ -178,3 +178,5 @@ Q_CLUSTER = {
 }
 
 USE_THOUSAND_SEPARATOR = True
+
+CONFIRM_POPUP_TEXT = 'Are you sure you wish to perform this action?'

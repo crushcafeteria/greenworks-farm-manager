@@ -3,10 +3,12 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col my-0">
-                <h5 class="card-title">{{ label }}</h5>
+            <div class="col">
+                <h5 class="card-title d-none d-lg-block">{{ label }}</h5>
+                <p class="d-block d-lg-none mb-1 text-muted">{{ label }}</p>
             </div>
         </div>
-        <h3 class="mb-1">Ksh {{ value|intcomma }}</h3>
+        <h3 class="mb-1 d-none d-lg-block">Ksh {{ value|intcomma }}</h3>
+        <h5 class="mb-1 d-block d-lg-none">Ksh {{ value|intcomma }}</h5>
     </div>
 </div>
