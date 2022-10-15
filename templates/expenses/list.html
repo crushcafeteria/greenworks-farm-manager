@@ -39,7 +39,7 @@
         <div class="row row-cols-1 row-cols-lg-4 gy-3 mb-4">
             <div class="col">
                 <input type="text" name="q" class="form-control"
-                       placeholder="Search then Enter" value="{{ request.GET.q }}">
+                       placeholder="Search keyword" value="{{ request.GET.q }}">
             </div>
             <div class="col">
                 <select name="valid" class="form-control">
@@ -136,23 +136,32 @@
                             <h6 class="text-primary">Ksh {{ expense.amount|intcomma }}</h6>
                             <hr>
                             <p class="card-text">
-                                {{ expense.description|truncatechars:150|linebreaks }}
+                                {% if expense.description %}
+                                    {{ expense.description|truncatechars:150|linebreaks }}
+                                {% else %}
+                                    Not Available
+                                {% endif %}
                             </p>
-
                             {% if expense.valid == 'YES' %}
                                 <span class="text-success float-end pt-2">
-                                    <i class="fa fa-check-circle fa-fw"></i> Valid
+                                    <i class="fa fa-check-circle fa-fw"></i>
                                 </span>
                             {% else %}
                                 <span class="text-warning float-end pt-2">
-                                    <i class="fa fa-exclamation-triangle fa-fw"></i> Pending Validation
+                                    <i class="fa fa-exclamation-triangle fa-fw"></i>
                                 </span>
                             {% endif %}
 
                             <a href="{% url 'expenses_details' pk=expense.id %}"
-                               class="btn btn-outline-primary">
+                               class="btn btn-outline-primary btn-sm">
                                 <i class="fa fa-info-circle fa-fw"></i> Details
                             </a>
+                            {% if expense.valid == 'NO' %}
+                                <a href="{% url 'expenses_validate' pk=expense.id %}"
+                                   class="btn btn-outline-success btn-sm">
+                                    <i class="fa fa-check-circle fa-fw"></i> Validate
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -165,14 +174,18 @@
                 </div>
                 <div class="text-center mb-2">
                     {% if page_obj.has_previous %}
-                        <a class="btn btn-outline-primary" href="?page=1&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">&laquo; first</a>
+                        <a class="btn btn-outline-primary"
+                           href="?page=1&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">&laquo;
+                            first</a>
                         <a class="btn btn-primary"
                            href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">previous</a>
                     {% endif %}
 
                     {% if page_obj.has_next %}
-                        <a class="btn btn-primary" href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">next</a>
-                        <a class="btn btn-outline-primary" href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">last
+                        <a class="btn btn-primary"
+                           href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">next</a>
+                        <a class="btn btn-outline-primary"
+                           href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">last
                             &raquo;</a>
                     {% endif %}
                 </div>

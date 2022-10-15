@@ -28,3 +28,8 @@ python manage.py qcluster
 ```
 gunicorn greenworks.wsgi:application --bind=0.0.0.0:9000
 ```
+
+## Activate venv
+```
+source ../python_venvs/greenworks/bin/activate
+```

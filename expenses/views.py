@@ -92,4 +92,4 @@ class ValidateExpense(UpdateView):
         expense = Expenses.objects.filter(pk=pk)
         expense.update(valid='YES')
         messages.success(self.request, 'You have validated this expense')
-        return redirect('expenses_details', pk=pk)
+        return redirect('/expenses?valid=NO')

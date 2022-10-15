@@ -61,8 +61,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'livereload.middleware.LiveReloadScript',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    'livereload.middleware.LiveReloadScript'
+
 ]
 
 ROOT_URLCONF = 'greenworks.urls'
