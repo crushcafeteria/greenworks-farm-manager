@@ -1,37 +1,55 @@
 {% extends 'layout/master.html' %}
 {% load humanize %}
 
-{% block content %}
+{% block title %}Sales{% endblock %}
 
-    <div class="row row-cols-lg-2">
-        <div class="col-8">
+{% block content %}
+    <div class="row row-cols-lg-2 mb-3">
+        <div class="col-9 col-lg-10">
             <h1 class="h3 mb-3">
                 <i class="fa fa-shopping-bag fa-fw"></i> Sales Records
             </h1>
         </div>
-        <div class="col-4">
+        <div class="col-3 col-lg-2">
             <div class="row">
                 <div class="col">
-                    <a href="{% url 'sales_create' %}" class="btn btn-success float-end btn-sm">
-                        <i class="fa fa-plus-circle fa-fw"></i> Add New
+                    <a href="{% url 'sales_create' %}" class="btn btn-success float-end btn-sm w-100">
+                        <i class="fa fa-plus-circle fa-fw"></i> Add
                     </a>
-                </div>
-                <div class="col d-none d-lg-block">
-                    <form action="{% url 'sales_list' %}" method="get">
-                        <input type="text" name="q" class="form-control form-control-sm float-end" placeholder="Search"
-                               value="{{ q }}">
-                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <form action="{% url 'sales_list' %}" method="get">
-        <div class="row row-cols-2 d-block d-lg-none mb-4">
-            <div class="col-12 mb-3">
-                <input type="text" name="q" class="form-control" placeholder="Find a sale" value="{{ q }}">
+    {# Summary widgets #}
+    <div class="row mb-3">
+        <div class="col-6 col-lg-4">
+            {% include 'component/statistic.html' with label='This Month' value=month_expenses %}
+        </div>
+        <div class="col-6 col-lg-4">
+            {% include 'component/statistic.html' with label='Total Expenses' value=total_expenses %}
+        </div>
+    </div>
+
+    {#Search & filters#}
+    <form action="{% url 'sales_list' %}" method="get" class="mb-4">
+        <div class="row row-cols-1 row-cols-lg-4 gy-3 mb-4">
+            <div class="col">
+                <input type="text" name="q" class="form-control"
+                       placeholder="Search keyword" value="{{ request.GET.q }}">
             </div>
-            <div class="col-12">
+            <div class="col">
+                <select name="product" class="form-control">
+                    <option value="">All Products</option>
+                    {% for product in products %}
+                        <option value="{{ product.id }}" {% if request.GET.product == product.id %}
+                                selected {% endif %}>
+                            {{ product.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
                 <button type="submit" class="btn btn-outline-primary w-100">
                     <i class="fa fa-search fa-fw"></i> Search
                 </button>
@@ -39,159 +57,113 @@
         </div>
     </form>
 
-    {# Summary widgets #}
-    <div class="row">
-        <div class="col-6 col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Sales this month</h5>
-                        </div>
-                    </div>
-                    <h3 class="mb-3">Ksh {{ month_sales|intcomma }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-lg-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Total Sales</h5>
-                        </div>
-                    </div>
-                    <h3 class="mb-3">Ksh {{ total_sales|intcomma }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-12 text-center">
             {% include 'component/messages.html' %}
         </div>
 
-        {# Desktop view #}
-        <div class="col-12 d-none d-lg-block">
-            <div class="card">
-                <div class="card-body">
-                    {% if sales %}
-                        <table class="table table-hover">
-                            <tr>
-                                <th>Date</th>
-                                <th>Product</th>
-                                <th>Amount</th>
-                                <th colspan="2">Quantity</th>
-                            </tr>
-                            {% for sale in sales %}
-                                <tr>
-                                    <td>{{ sale.date }}</td>
-                                    <td>{{ sale.product.name }}</td>
-                                    <td>Ksh {{ sale.amount|intcomma }}</td>
-                                    <td>{{ sale.quantity }} kgs</td>
-                                    <td>
-                                        <div class="btn btn-group float-end">
-                                            <a href="{% url 'sales_details' pk=sale.id %}"
-                                               class="btn btn-outline-primary btn-sm">
-                                                <i class="fa fa-info-circle fa-fw"></i> Details
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    {% else %}
-                        <h3 class="text-warning text-center">
-                            <i class="fa fa-face-frown-open fa-2x"></i>
-                            <br>
-                            <br>
-                            You have not recorded any expenses
-                        </h3>
-                    {% endif %}
-                </div>
+        {% if sales %}
+            {# Desktop view #}
+            <div class="col-12 d-none d-lg-block">
+                <table class="table table-bordered table-sm bg-white table-hover">
+                    <tr>
+                        <th>Date</th>
+                        <th>Product</th>
+                        <th>Amount</th>
+                        <th colspan="2">Quantity</th>
+                    </tr>
+                    {% for sale in sales %}
+                        <tr>
+                            <td>{{ sale.date }}</td>
+                            <td>{{ sale.product.name }}</td>
+                            <td>Ksh {{ sale.amount|intcomma }}</td>
+                            <td>{{ sale.quantity }} kgs</td>
+                            <td>
+                                <div class="btn btn-group float-end">
+                                    <a href="{% url 'sales_details' pk=sale.id %}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fa fa-info-circle fa-fw"></i> Details
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
-        </div>
 
-        {# Mobile view #}
-        {% for sale in sales %}
-            <div class="col-12 d-block d-lg-none">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="text-muted float-end">
-                            {{ sale.quantity }} KG
-                        </h6>
-                        <h4 class="mb-2">
-                            <i class="fa fa-shopping-bag fa-fw"></i> {{ sale.product.name }}
-                        </h4>
-                        <h6 class="text-muted float-end">
-                            <i class="fa fa-calendar fa-fw"></i> {{ sale.date }}
-                        </h6>
-                        <h6 class="text-primary">Ksh {{ sale.amount|intcomma }}</h6>
-                        <p class="card-text">
-                            {{ sale.description|truncatechars:150 }}
-                        </p>
-                        <a href="{% url 'sales_details' pk=sale.id %}"
-                           class="btn btn-outline-primary">
-                            <i class="fa fa-info-circle fa-fw"></i> Details
-                        </a>
+            {# Mobile view #}
+            {% for sale in sales %}
+                <div class="col-12 d-block d-lg-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="text-muted float-end">
+                                <i class="fa fa-calendar fa-fw"></i> {{ sale.date }}
+                            </h6>
+                            <h4 class="mb-2">{{ sale.product.name }}</h4>
+                            <h6 class="text-muted float-end">
+                                <i class="fa fa-scale-balanced fa-fw"></i> {{ sale.quantity }} kg
+                            </h6>
+                            <h6 class="text-primary">Ksh {{ sale.amount|intcomma }}</h6>
+                            <hr>
+                            <p class="card-text">
+                                {% if sale.description %}
+                                    {{ sale.description|truncatechars:150|linebreaks }}
+                                {% else %}
+                                    Not Available
+                                {% endif %}
+                            </p>
+                            {% if sale.valid == 'YES' %}
+                                <span class="text-success float-end pt-2">
+                                    <i class="fa fa-check-circle fa-fw"></i>
+                                </span>
+                            {% else %}
+                                <span class="text-warning float-end pt-2">
+                                    <i class="fa fa-exclamation-triangle fa-fw"></i>
+                                </span>
+                            {% endif %}
+
+                            <a href="{% url 'sales_details' pk=sale.id %}"
+                               class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-info-circle fa-fw"></i> Details
+                            </a>
+                            {% if sale.valid == 'NO' %}
+                                <a href="{% url 'expenses_validate' pk=sale.id %}"
+                                   class="btn btn-outline-success btn-sm">
+                                    <i class="fa fa-check-circle fa-fw"></i> Validate
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
 
-        {# Pagination #}
-        {% if expenses %}
-            <nav>
-                <div class="float-end pt-3">
-                    Found {{ expenses.paginator.count }} rows
+            {# Pagination #}
+            <div class="col-12">
+                <div class="current pb-3 text-center">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                 </div>
-                <ul class="pagination">
-                    {% if expenses.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ expenses.previous_page_number }}">
-                                <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                            </a>
-                        </li>
+                <div class="text-center mb-2">
+                    {% if page_obj.has_previous %}
+                        <a class="btn btn-outline-primary"
+                           href="?page=1&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">&laquo;
+                            first</a>
+                        <a class="btn btn-primary"
+                           href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">previous</a>
                     {% endif %}
 
-                    {% if expenses.number|add:'-4' > 1 %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ expenses.number|add:'-5' }}">
-                                &hellip;
-                            </a>
-                        </li>
+                    {% if page_obj.has_next %}
+                        <a class="btn btn-primary"
+                           href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">next</a>
+                        <a class="btn btn-outline-primary"
+                           href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">last
+                            &raquo;</a>
                     {% endif %}
+                </div>
+            </div>
 
-                    {% for i in expenses.paginator.page_range %}
-                        {% if expenses.number == i %}
-                            <li class="page-item active">
-                                <a class="page-link" href="#">
-                                    {{ i }} <span class="sr-only">(current)</span>
-                                </a>
-                            </li>
-                        {% elif i > expenses.number|add:'-5' and i < expenses.number|add:'5' %}
-                            <li class="page-item">
-                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if expenses.paginator.num_pages > expenses.number|add:'4' %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ expenses.number|add:'5' }}">&hellip;</a>
-                        </li>
-                    {% endif %}
-
-                    {% if expenses.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ expenses.next_page_number }}">
-                                <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+        {% else %}
+            {% include 'component/no-results.html' with message='You have not recorded any sales' %}
         {% endif %}
     </div>
 

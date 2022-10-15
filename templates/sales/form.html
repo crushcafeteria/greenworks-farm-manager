@@ -1,28 +1,38 @@
 {% extends 'layout/master.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}Record sale{% endblock %}
+
 {% block content %}
 
-    <a href="{% url 'list_expenses' %}" class="btn btn-warning float-end btn-sm">
-        <i class="fa fa-caret-left fa-fw"></i> Go Back
-    </a>
+    {% if editing %}
+        <a href="{% url 'sales_details' pk=sale.id %}" class="btn btn-warning float-end btn-sm">
+            <i class="fa fa-caret-left fa-fw"></i> Go Back
+        </a>
+    {% else %}
+        <a href="{% url 'sales_list' %}" class="btn btn-warning float-end btn-sm">
+            <i class="fa fa-caret-left fa-fw"></i> Go Back
+        </a>
+    {% endif %}
+
     <h1 class="h3 mb-3">
-        {% if form.is_bound %}
+        {% if editing %}
             <i class="fa fa-file-edit fa-fw"></i> Edit a sale
         {% else %}
             <i class="fa fa-plus-circle fa-fw"></i> Create a sale
         {% endif %}
     </h1>
+    <br>
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <form action="{% url 'sales_create' %}" method="POST">
+                    <form method="POST">
                         {% csrf_token %}
                         {{ form | crispy }}
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fa fa-check-circle fa-fw"></i> Save Sale
+                            <i class="fa fa-check-circle fa-fw"></i> Save Expense
                         </button>
                     </form>
                 </div>

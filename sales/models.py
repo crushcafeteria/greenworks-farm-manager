@@ -11,12 +11,18 @@ class Product(models.Model):
 
 
 class Sales(models.Model):
+    VALIDATION = [
+        ('YES', 'Yes'),
+        ('NO', 'No'),
+    ]
+
     product = models.ForeignKey(Product, on_delete=models.CASCADE, default=None, verbose_name='Product Name')
     date = models.DateField('Sale Date')
     amount = models.FloatField('Amount')
-    quantity = models.FloatField('Quantity (in kg)')
-    description = models.TextField('Description')
-    author_id = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Recorded By')
+    quantity = models.FloatField('Quantity (in kg)', null=True)
+    description = models.TextField('Description', null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Recorded By')
+    valid = models.CharField('Is Valid?', max_length=100, choices=VALIDATION, default='NO')
 
     class Meta:
         verbose_name = ('Sale')

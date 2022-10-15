@@ -12,7 +12,8 @@ class SalesForm(forms.ModelForm):
     )
     date = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
     amount = forms.FloatField(required=True)
-    quantity = forms.FloatField(required=True)
+    quantity = forms.FloatField(required=False)
+    description = forms.CharField(widget=forms.Textarea, required=False)
 
     class Meta:
         model = Sales

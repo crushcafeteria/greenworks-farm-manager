@@ -27,7 +27,7 @@ class Expenses(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Recorded By')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    valid = models.CharField('Is Valid?', max_length=100, choices=EXPENSE_TYPES, default='NO')
+    valid = models.CharField('Is Valid?', max_length=100, choices=VALIDATION, default='NO')
 
 
     def __str__(self):
