@@ -17,7 +17,11 @@
 
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-up.html"/>
 
-    <title>Sign Up | AdminKit Demo</title>
+    <title>
+        {{ APP_NAME }} -
+        {% block title %}
+        {% endblock title %}
+    </title>
 
     <link href="{% static 'bootstrap-5.2.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'adminkit/css/app.css' %}" rel="stylesheet">

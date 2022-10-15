@@ -1,6 +1,8 @@
 {% extends 'layout/auth.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}Staff Login{% endblock %}
+
 {% block content %}
     <div class="row vh-100">
         <div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
@@ -26,9 +28,6 @@
                                 {% csrf_token %}
                                 {{ form | crispy }}
                                 <div class="mt-3">
-                                    <a href="/accounts/register" class="btn btn-lg btn-link float-end pt-3">
-                                        <i class="fa fa-plus-circle fa-fw"></i> Create Account
-                                    </a>
                                     <button type="submit" class="btn btn-lg btn-primary">
                                         <i class="fa fa-check-circle fa-fw"></i> Login
                                     </button>
