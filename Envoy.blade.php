@@ -1,4 +1,4 @@
-@servers(['production' => 'lipasafe.com', 'localhost' => '127.0.0.1'])
+@servers(['production' => 'root@lipasafe.com', 'localhost' => '127.0.0.1'])
 
 
 @task('push_to_vc', ['on' => 'localhost'])
