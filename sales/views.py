@@ -6,6 +6,8 @@ from django.views.generic import DetailView, ListView
 import datetime
 from django.db.models import Sum, Q
 from sales.models import Product
+from django.contrib import messages
+from django.shortcuts import redirect
 
 
 class SalesListView(LoginRequiredMixin, ListView):
@@ -17,8 +19,8 @@ class SalesListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         month = datetime.datetime.now().month
-        context['month_expenses'] = Sales.objects.filter(date__month=month).aggregate(Sum('amount'))['amount__sum']
-        context['total_expenses'] = Sales.objects.aggregate(Sum('amount'))['amount__sum']
+        context['month_sales'] = Sales.objects.filter(date__month=month).aggregate(Sum('amount'))['amount__sum']
+        context['total_sales'] = Sales.objects.aggregate(Sum('amount'))['amount__sum']
         context['q'] = self.request.GET.get('q', '')
         context['products'] = Product.objects.all()
 
@@ -33,6 +35,10 @@ class SalesListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(Q(description__icontains=q))
 
         # Filter by validation
+        if self.request.GET.get('valid'):
+            queryset = queryset.filter(valid__exact=self.request.GET.get('valid'))
+
+        # Filter by product
         if self.request.GET.get('product'):
             queryset = queryset.filter(product=self.request.GET.get('product'))
 
@@ -55,6 +61,7 @@ class SalesDetailView(LoginRequiredMixin, DetailView):
     template_name = 'sales/view.html'
     context_object_name = 'sale'
 
+
 class SalesUpdateView(UpdateView):
     model = Sales
     form_class = SalesForm
@@ -72,3 +79,22 @@ class SalesUpdateView(UpdateView):
         # initial['product'] = self.sale.product
         # return initial
 
+
+class SalesValidate(UpdateView):
+    template_name = 'sales/validate.html'
+    context_object_name = 'sale'
+    model = Sales
+    fields = ['product', 'amount', 'date', 'quantity', 'description']
+
+    # Form will always be invalid. Intercept request here to validate expense
+    def form_invalid(self, form):
+        pk = self.kwargs['pk']
+        sale = Sales.objects.filter(pk=pk)
+        sale.update(valid='YES')
+        messages.success(self.request, 'You have validated this sale')
+        return redirect('/sales?valid=NO')
+
+
+class SalesDeleteView(DeleteView):
+    model = Sales
+    success_url = '/sales'

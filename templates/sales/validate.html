@@ -1,0 +1,58 @@
+{% extends 'layout/master.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <div class="btn btn-group float-end">
+        <a href="{% url 'sales_details' pk=sale.id %}" class="btn btn-warning float-end btn-sm">
+            <i class="fa fa-caret-left fa-fw"></i> Cancel
+        </a>
+    </div>
+    <h1 class="h3 mb-3">
+        <i class="fa fa-check-circle fa-fw"></i> Validate this sale
+    </h1>
+
+    <br>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row row-cols-1 row-cols-lg-3 gb-5">
+                            <div class="col">
+                                <label>Product Name</label>
+                                <h4>{{ object.product.name }}</h4>
+                            </div>
+                            <div class="col">
+                                <label>Quantity</label>
+                                <h4>{{ object.quantity }}</h4>
+                            </div>
+                            <div class="col">
+                                <label>Amount</label>
+                                <h4>Ksh {{ object.amount }}</h4>
+                            </div>
+                            <div class="col">
+                                <label>Date</label>
+                                <h4>{{ object.date }}</h4>
+                            </div>
+                        </div>
+                        <div class="col pt-2">
+                            <label>Description</label>
+                            <h4>{{ object.description }}</h4>
+                        </div>
+                        <br>
+
+                        <button class="btn btn-success" type="submit"
+                                onclick="return confirm('{{ CONFIRM_POPUP_TEXT }}')">
+                            <i class="fa fa-check-circle fa-fw"></i> Validate this expense
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

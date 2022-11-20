@@ -1,7 +1,7 @@
 {% extends 'layout/master.html' %}
 {% load humanize %}
 
-{% block title %}Sales{% endblock %}
+{% block title %}Sales Records{% endblock %}
 
 {% block content %}
     <div class="row row-cols-lg-2 mb-3">
@@ -24,10 +24,10 @@
     {# Summary widgets #}
     <div class="row mb-3">
         <div class="col-6 col-lg-4">
-            {% include 'component/statistic.html' with label='This Month' value=month_expenses %}
+            {% include 'component/statistic.html' with label='This Month' value=month_sales %}
         </div>
         <div class="col-6 col-lg-4">
-            {% include 'component/statistic.html' with label='Total Expenses' value=total_expenses %}
+            {% include 'component/statistic.html' with label='Total Expenses' value=total_sales %}
         </div>
     </div>
 
@@ -47,6 +47,17 @@
                             {{ product.name }}
                         </option>
                     {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <select name="valid" class="form-control">
+                    <option value="">Any validation type</option>
+                    <option value="YES" {% if request.GET.valid == 'YES' %} selected {% endif %}>
+                        Validated Only
+                    </option>
+                    <option value="NO" {% if request.GET.valid == 'NO' %} selected {% endif %}>
+                        Pending Only
+                    </option>
                 </select>
             </div>
             <div class="col">
@@ -71,7 +82,8 @@
                         <th>Date</th>
                         <th>Product</th>
                         <th>Amount</th>
-                        <th colspan="2">Quantity</th>
+                        <th>Quantity</th>
+                        <th colspan="2">Status</th>
                     </tr>
                     {% for sale in sales %}
                         <tr>
@@ -80,11 +92,29 @@
                             <td>Ksh {{ sale.amount|intcomma }}</td>
                             <td>{{ sale.quantity }} kgs</td>
                             <td>
+                                {% if sale.valid == 'YES' %}
+                                    <div class="text-success">
+                                        <i class="fa fa-check-circle fa-fw"></i> Valid
+                                    </div>
+                                {% else %}
+                                    <div class="text-warning">
+                                        <i class="fa fa-exclamation-triangle fa-fw"></i> Pending Validation
+                                    </div>
+                                {% endif %}
+
+                            </td>
+                            <td>
                                 <div class="btn btn-group float-end">
                                     <a href="{% url 'sales_details' pk=sale.id %}"
                                        class="btn btn-outline-primary btn-sm">
                                         <i class="fa fa-info-circle fa-fw"></i> Details
                                     </a>
+                                    {% if sale.valid == 'NO' %}
+                                        <a href="{% url 'sales_validate' pk=sale.id %}"
+                                           class="btn btn-outline-success btn-sm">
+                                            <i class="fa fa-check-circle fa-fw"></i> Validate
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

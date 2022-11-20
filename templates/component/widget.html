@@ -1,0 +1,16 @@
+{% load humanize %}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col">
+                <h5 class="card-title d-none d-lg-block">{{ label }}</h5>
+                <p class="d-block d-lg-none mb-1 text-muted">{{ label }}</p>
+            </div>
+        </div>
+        {% autoescape off %}
+            <h3 class="mb-1 d-none d-lg-block">{{ value }}</h3>
+            <h5 class="mb-1 d-block d-lg-none">{{ value }}</h5>
+        {% endautoescape %}
+    </div>
+</div>

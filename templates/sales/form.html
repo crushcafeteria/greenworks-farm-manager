@@ -1,7 +1,13 @@
 {% extends 'layout/master.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Record sale{% endblock %}
+{% block title %}
+    {% if editing %}
+        Edit sale
+    {% else %}
+        Create sale
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 

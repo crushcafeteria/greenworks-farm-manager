@@ -1,0 +1,37 @@
+{% extends 'layout/master.html' %}
+
+{% block title %}
+    Confirm delete action
+{% endblock %}
+
+{% block content %}
+
+    <div class="btn btn-group float-end">
+        <a href="{% url 'sales_list' %}" class="btn btn-warning float-end btn-sm">
+            <i class="fa fa-caret-left fa-fw"></i> Go Back
+        </a>
+    </div>
+    <h1 class="h3 mb-3">
+        <i class="fa fa-eye fa-fw"></i> Confirm delete
+    </h1>
+
+    <br>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">{% csrf_token %}
+                        <p>Are you sure you want to delete "{{ object }}"?</p>
+                        {{ form }}
+                        <input type="submit" value="Confirm" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+            <p class="text-muted">
+                Recorded by {{ sales.author__set.first_name }}
+            </p>
+        </div>
+    </div>
+
+{% endblock content %}

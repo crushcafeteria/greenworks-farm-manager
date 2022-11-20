@@ -2,7 +2,7 @@
 {% load humanize %}
 
 {% block title %}
-    Sale Details
+    Sale #{{ sale.id }} Details
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,7 @@
 
     <br>
     {# Messages #}
-    {% if expense.valid == 'NO' %}
+    {% if sale.valid == 'NO' %}
         {% include 'component/alertbox.html' with color='warning' message='This sale has not been validated' %}
     {% endif %}
 
@@ -51,14 +51,14 @@
                     </div>
                     <br>
 
-                    <a href="{% url 'expenses_delete' pk=sale.id %}" class="btn btn-outline-danger float-end btn-sm">
+                    <a href="{% url 'sales_delete' pk=sale.id %}" class="btn btn-outline-danger float-end btn-sm">
                         <i class="fa fa-trash fa-fw"></i> Delete
                     </a>
                     <a href="{% url 'sales_update' pk=sale.id %}" class="btn btn-primary btn-sm">
                         <i class="fa fa-edit fa-fw"></i> Edit
                     </a>
                     {% if sale.valid == 'NO' %}
-                        <a href="{% url 'expenses_validate' pk=sale.id %}" class="btn btn-success float-end btn-sm">
+                        <a href="{% url 'sales_validate' pk=sale.id %}" class="btn btn-success float-end btn-sm">
                             <i class="fa fa-check-circle fa-fw"></i> Validate
                         </a>
                     {% endif %}
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <p class="text-muted">
-                Recorded by {{ expense.author.first_name }} {{ expense.author.last_name }} on {{ expense.created_at }}
+                Recorded by {{ sale.author.first_name }} {{ sale.author.last_name }} on {{ sale.created_at }}
             </p>
         </div>
     </div>
