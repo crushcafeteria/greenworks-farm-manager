@@ -1,9 +1,9 @@
-{% extends 'layout/master.html' %}
+{% extends "layout/master.html" %}
 {% load humanize %}
 
 {% block title %}
     List of expenses
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
 
@@ -110,10 +110,12 @@
                                        class="btn btn-outline-primary btn-sm">
                                         <i class="fa fa-info-circle fa-fw"></i> Details
                                     </a>
-                                    <a href="{% url 'expenses_validate' pk=expense.id %}"
-                                       class="btn btn-outline-success btn-sm">
-                                        <i class="fa fa-check-circle fa-fw"></i> Validate
-                                    </a>
+                                    {% if expense.valid == 'NO' %}
+                                        <a href="{% url 'expenses_validate' pk=expense.id %}"
+                                           class="btn btn-outline-success btn-sm">
+                                            <i class="fa fa-check-circle fa-fw"></i> Validate
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>
