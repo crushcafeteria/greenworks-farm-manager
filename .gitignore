@@ -1,2 +1,8 @@
 .env
 assets
+*.log
+*.pot
+*.pyc
+__pycache__/
+.env
+db.sqlite3
