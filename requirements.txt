@@ -1,5 +1,4 @@
 appdirs==1.4.3
-apturl==0.5.2
 argcomplete==2.0.0
 arrow==1.2.3
 asgiref==3.5.2

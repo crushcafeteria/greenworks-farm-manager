@@ -12,8 +12,6 @@ echo "COMPLETE => Source code successfully pushed to Git!"
 @task('deploy_on_server', ['on'=>'production'])
     cd /mnt/www/greenworks/farm-manager
     git pull origin main
-    source ../venv/bin/activate
-    pip install -r requirements.txt
 @endtask
 
 @story('deploy')
