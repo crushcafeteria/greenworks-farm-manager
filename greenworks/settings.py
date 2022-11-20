@@ -25,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['greenworks.sodium.co.ke', 'localhost', '127.0.0.1', '45.79.236.53']
+ALLOWED_HOSTS = ['greenworks.sodium.co.ke',
+                 'localhost', '127.0.0.1', '45.79.236.53']
 
 # Application definition
 
@@ -47,8 +48,9 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "debug_toolbar",
     'corsheaders',
-    'django_q',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'django_crontab',
+
 ]
 
 MIDDLEWARE = [
@@ -70,10 +72,10 @@ ROOT_URLCONF = 'greenworks.urls'
 
 TEMPLATES = [
     {
-        'BACKEND' : 'django.template.backends.django.DjangoTemplates',
-        'DIRS'    : [BASE_DIR / 'templates'],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
-        'OPTIONS' : {
+        'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -91,11 +93,11 @@ WSGI_APPLICATION = 'greenworks.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : env.str('DB_NAME'),
-        'HOST'    : env.str('DB_HOST'),
-        'PORT'    : env.str('DB_PORT'),
-        'USER'    : env.str('DB_USER'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env.str('DB_NAME'),
+        'HOST': env.str('DB_HOST'),
+        'PORT': env.str('DB_PORT'),
+        'USER': env.str('DB_USER'),
         'PASSWORD': env.str('DB_PASS'),
     }
 }
@@ -133,7 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -141,6 +143,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [
+    BASE_DIR / "static"
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -170,13 +173,17 @@ LOCATION_KEY = env.str('LOCATION_KEY')
 CSRF_TRUSTED_ORIGINS = ['https://greenworks.sodium.co.ke']
 
 Q_CLUSTER = {
-    'name'      : 'DjangoORM',
-    'timeout'   : 1200,  # Timeout in secs for a task
+    'name': 'DjangoORM',
+    'timeout': 1200,  # Timeout in secs for a task
     'save_limit': 10,  # Store latest 10 results only
-    'catch_up'  : False,  # Ignore un-run scheduled tasks
-    'orm'       : 'default'  # Django database connection
+    'catch_up': False,  # Ignore un-run scheduled tasks
+    'orm': 'default'  # Django database connection
 }
 
 USE_THOUSAND_SEPARATOR = True
 
 CONFIRM_POPUP_TEXT = 'Are you sure you wish to perform this action?'
+
+CRONJOBS = [
+    ('0 * * * *', 'weather.cron.fetch_latest_weather')
+]

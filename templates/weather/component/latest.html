@@ -1,0 +1,77 @@
+<div class="row my-3">
+    {# Weather description #}
+    <div class="col-12 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col my-0">
+                        <h5 class="card-title">Latest Weather</h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <i class="fa fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="mb-3">{{ latest.description }}</h1>
+            </div>
+        </div>
+    </div>
+
+    {# 12 hour precipitation #}
+    <div class="col-12 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col my-0">
+                        <h5 class="card-title">Rainfall</h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <i class="fa fa-cloud-rain"></i>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="mb-3">{{ latest.precipitation_12_hr }} mm</h1>
+            </div>
+        </div>
+    </div>
+
+    {# Temperature #}
+    <div class="col-12 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col my-0">
+                        <h5 class="card-title">Temperature</h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <i class="fa fa-thermometer-three-quarters"></i>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="mb-3">{{ latest.temperature }} <sup>o</sup>C</h1>
+            </div>
+        </div>
+    </div>
+
+    {# Relative humidity #}
+    <div class="col-12 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col my-0">
+                        <h5 class="card-title">Relative Humidity</h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <i class="fa fa-droplet"></i>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="mb-3">{{ latest.relative_humidity }}%</h1>
+            </div>
+        </div>
+    </div>
+</div>

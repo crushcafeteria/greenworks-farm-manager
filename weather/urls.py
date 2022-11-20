@@ -1,8 +1,7 @@
 from django.urls import path
 from django.contrib import admin
-from .views import weather
+from weather.views import WeatherListView
 
 urlpatterns = [
-    path('fetch/', weather.fetch, name='weather_fetch'),
-    path('databank/', weather.list, name='weather_list'),
+    path('', WeatherListView.as_view(), name='weather_list'),
 ]

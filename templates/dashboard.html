@@ -1,18 +1,21 @@
 {% extends 'layout/master.html' %}
 
-{% block content %}
+{% block title %}
+    Dashboard
+{% endblock %}
 
+{% block content %}
     <h1 class="text-muted mb-4">Shortcuts</h1>
     <div class="row">
         <div class="col-6 col-lg-3">
             <div class="card">
                 <a href="{% url 'expenses_create' %}">
                     <div class="card-body text-center">
-                        <h3 class="mb-3">
+                        <h4 class="mb-3">
                             <i class="fa fa-money-bill fa-2x"></i>
                             <br>
                             Record Expense
-                        </h3>
+                        </h4>
                     </div>
                 </a>
             </div>
@@ -37,78 +40,22 @@
     <div class="row">
         {# Weather description #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Current Weather</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-eye"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">{{ current_weather.description }}</h1>
-                </div>
-            </div>
+            {% include 'component/widget.html' with label='Current Weather' value=current_weather.description %}
         </div>
 
         {# 12 hour precipitation #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Rain in the last 12 hours</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-cloud-rain"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">{{ current_weather.precipitation_12_hr }} mm</h1>
-                </div>
-            </div>
+            {% include 'component/widget.html' with label='Rain in the last 12 hours' value=current_weather.precipitation_12_hr_formatted %}
         </div>
 
         {# Temperature #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Current Temperature</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-thermometer-three-quarters"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">{{ current_weather.temperature }} <sup>o</sup>C</h1>
-                </div>
-            </div>
+            {% include 'component/widget.html' with label='Temperature' value=current_weather.temperature_formatted %}
         </div>
 
         {# Relative humidity #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Relative Humidity</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-droplet"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">{{ current_weather.relative_humidity }}%</h1>
-                </div>
-            </div>
+            {% include 'component/widget.html' with label='Relative Humidity' value=current_weather.relative_humidity_formatted %}
         </div>
     </div>
     <br>
@@ -117,78 +64,22 @@
     <div class="row">
         {# Sales this month #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Sales this month</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-thermometer-three-quarters"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">0</h1>
-                </div>
-            </div>
+            {% include 'component/statistic.html' with label='Sales This Month' value=sales_this_month %}
         </div>
 
         {# Total sales #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Total Sales</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-droplet"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">0</h1>
-                </div>
-            </div>
+            {% include 'component/statistic.html' with label='Total Sales' value=total_sales %}
         </div>
 
         {# Month expenses #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Expenses this month</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-eye"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">0</h1>
-                </div>
-            </div>
+            {% include 'component/statistic.html' with label='Expenses This Month' value=expenses_this_month %}
         </div>
 
         {# Total Expenses #}
         <div class="col-6 col-lg-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col my-0">
-                            <h5 class="card-title">Total Expenses</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fa fa-cloud-rain"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mb-3">0</h1>
-                </div>
-            </div>
+            {% include 'component/statistic.html' with label='Total Expenses' value=total_expenses %}
         </div>
     </div>
     <br>

@@ -1,4 +1,8 @@
-{% extends 'layout/master.html' %}
+{% extends "layout/master.html" %}
+
+{% block title %}
+    Weather Information
+{% endblock title %}
 
 {% block content %}
 
@@ -11,190 +15,134 @@
         <div class="col-lg-4">
             <div class="row">
                 <div class="col">
-                    <a href="{% url 'weather_fetch' %}" class="btn btn-outline-primary float-end btn-sm">
+                    {% comment %} <a href="{% url 'weather_refresh' %}" class="btn btn-outline-primary float-end btn-sm">
                         <i class="fa fa-refresh fa-fw"></i> Fetch Data
-                    </a>
+                    </a> {% endcomment %}
                 </div>
             </div>
         </div>
     </div>
 
+    {# Latest weather #}
+    {% include "weather/component/latest.html" with latest=latest %}
+
     <div class="row">
 
-        <div class="w-100 pt-3">
-            <div class="row">
-                {# Weather description #}
-                <div class="col-12 col-lg-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col my-0">
-                                    <h5 class="card-title">Current Weather</h5>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="stat text-primary">
-                                        <i class="fa fa-eye"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <h1 class="mb-3">{{ current.description }}</h1>
-                        </div>
-                    </div>
-                </div>
-
-                {# 12 hour precipitation #}
-                <div class="col-12 col-lg-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col my-0">
-                                    <h5 class="card-title">Rain in the last 12 hours</h5>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="stat text-primary">
-                                        <i class="fa fa-cloud-rain"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <h1 class="mb-3">{{ current.precipitation_12_hr }} mm</h1>
-                        </div>
-                    </div>
-                </div>
-
-                {# Temperature #}
-                <div class="col-12 col-lg-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col my-0">
-                                    <h5 class="card-title">Current Temperature</h5>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="stat text-primary">
-                                        <i class="fa fa-thermometer-three-quarters"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <h1 class="mb-3">{{ current.temperature }} <sup>o</sup>C</h1>
-                        </div>
-                    </div>
-                </div>
-
-                {# Relative humidity #}
-                <div class="col-12 col-lg-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col my-0">
-                                    <h5 class="card-title">Relative Humidity</h5>
-                                </div>
-                                <div class="col-auto">
-                                    <div class="stat text-primary">
-                                        <i class="fa fa-droplet"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <h1 class="mb-3">{{ current.relative_humidity }}%</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-12 text-center">
+            {% include 'component/messages.html' %}
         </div>
 
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <table class="table table-hover">
+        {% if weatherdata %}
+            {# Desktop view #}
+            <div class="col-12 d-none d-lg-block">
+                <table class="table table-hover bg-white">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Description</th>
+                        <th>Temp</th>
+                        <th>Relative Humidity</th>
+                        <th>Wind Speed</th>
+                        <th>UV Index</th>
+                        <th>Cloud Cover</th>
+                        <th>Cloud Ceiling</th>
+                        <th colspan="2">12 Hr Precipitation</th>
+                    </tr>
+                    {% for data in object_list %}
                         <tr>
-                            <th>Timestamp</th>
-                            <th>Description</th>
-                            <th>Temp</th>
-                            <th>Temp Range</th>
-                            <th>Relative Humidity</th>
-                            <th>Wind Direction</th>
-                            <th>Wind Speed</th>
-                            <th>UV Index</th>
-                            <th>Cloud Cover</th>
-                            <th>Cloud Ceiling</th>
-                            <th colspan="2">12 Hr Precipitation</th>
+                            <td>{{ data.observation_timestamp }}</td>
+                            <td>{{ data.description }}</td>
+                            <td>{{ data.temperature }}℃</td>
+                            <td>{{ data.relative_humidity }}</td>
+                            <td>{{ data.wind_speed }}</td>
+                            <td>{{ data.uv_index }}</td>
+                            <td>{{ data.cloud_cover }}%</td>
+                            <td>{{ data.cloud_ceiling }} mtr</td>
+                            <td>{{ data.precipitation_12_hr }}mm</td>
+                            <td>
+                                <a href="#"
+                                   class="btn btn-outline-primary btn-sm float-end">
+                                    <i class="fa fa-info-circle fa-fw"></i> Details
+                                </a>
+                            </td>
                         </tr>
-                        {% for data in weather %}
-                            <tr>
-                                <td>{{ data.observation_timestamp }}</td>
-                                <td>{{ data.description }}</td>
-                                <td>{{ data.temperature }}℃</td>
-                                <td>{{ data.range_24_hr_temp }}℃</td>
-                                <td>{{ data.relative_humidity }}</td>
-                                <td>{{ data.wind_direction }}</td>
-                                <td>{{ data.wind_speed }}</td>
-                                <td>{{ data.uv_index }}</td>
-                                <td>{{ data.cloud_cover }}%</td>
-                                <td>{{ data.cloud_ceiling }} mtr</td>
-                                <td>{{ data.precipitation_12_hr }}mm</td>
-                                <td>
-                                    <a href="#"
-                                       class="btn btn-outline-primary btn-sm float-end">
-                                        <i class="fa fa-info-circle fa-fw"></i> Details
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
+                    {% endfor %}
+                </table>
+            </div>
 
-                    <nav>
-                        <span class="float-end pt-3">
-                            Found {{ weather.paginator.count }} rows
-                        </span>
-                        <ul class="pagination">
-                            {% if weather.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ weather.previous_page_number }}">
-                                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                                    </a>
-                                </li>
-                            {% endif %}
-
-                            {% if weather.number|add:'-4' > 1 %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ weather.number|add:'-5' }}">
-                                        &hellip;
-                                    </a>
-                                </li>
-                            {% endif %}
-
-                            {% for i in weather.paginator.page_range %}
-                                {% if weather.number == i %}
-                                    <li class="page-item active">
-                                        <a class="page-link" href="#">
-                                            {{ i }} <span class="sr-only">(current)</span>
-                                        </a>
-                                    </li>
-                                {% elif i > weather.number|add:'-5' and i < weather.number|add:'5' %}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                                    </li>
+            {# Mobile view #}
+            {% for expense in expenses %}
+                {% comment %} <div class="col-12 d-block d-lg-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="text-muted float-end">
+                                <i class="fa fa-sitemap fa-fw"></i> {{ expense.type }}
+                            </h6>
+                            <h4 class="mb-2">{{ expense.name }}</h4>
+                            <h6 class="text-muted float-end">
+                                <i class="fa fa-calendar fa-fw"></i> {{ expense.when }}
+                            </h6>
+                            <h6 class="text-primary">Ksh {{ expense.amount|intcomma }}</h6>
+                            <hr>
+                            <p class="card-text">
+                                {% if expense.description %}
+                                    {{ expense.description|truncatechars:150|linebreaks }}
+                                {% else %}
+                                    Not Available
                                 {% endif %}
-                            {% endfor %}
-
-                            {% if weather.paginator.num_pages > weather.number|add:'4' %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ weather.number|add:'5' }}">&hellip;</a>
-                                </li>
+                            </p>
+                            {% if expense.valid == 'YES' %}
+                                <span class="text-success float-end pt-2">
+                                    <i class="fa fa-check-circle fa-fw"></i>
+                                </span>
+                            {% else %}
+                                <span class="text-warning float-end pt-2">
+                                    <i class="fa fa-exclamation-triangle fa-fw"></i>
+                                </span>
                             {% endif %}
 
-                            {% if weather.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ weather.next_page_number }}">
-                                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                                    </a>
-                                </li>
+                            <a href="{% url 'expenses_details' pk=expense.id %}"
+                               class="btn btn-outline-primary btn-sm">
+                                <i class="fa fa-info-circle fa-fw"></i> Details
+                            </a>
+                            {% if expense.valid == 'NO' %}
+                                <a href="{% url 'expenses_validate' pk=expense.id %}"
+                                   class="btn btn-outline-success btn-sm">
+                                    <i class="fa fa-check-circle fa-fw"></i> Validate
+                                </a>
                             {% endif %}
-                        </ul>
-                    </nav>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+            {% endfor %}
 
+            {# Pagination #}
+            <div class="col-12">
+                <div class="current pb-3 text-center">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </div>
+                <div class="text-center mb-2">
+                    {% if page_obj.has_previous %}
+                        <a class="btn btn-outline-primary"
+                           href="?page=1&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">&laquo;
+                            first</a>
+                        <a class="btn btn-primary"
+                           href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">previous</a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                        <a class="btn btn-primary"
+                           href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">next</a>
+                        <a class="btn btn-outline-primary"
+                           href="?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&valid={{ request.GET.valid }}&type={{ request.GET.type }}">last
+                            &raquo;</a>
+                    {% endif %}
                 </div>
             </div>
-        </div>
+
+        {% else %}
+            {% include "component/no-results.html" with message="You have not recorded any expenses" %}
+        {% endif %}
+
     </div>
 
 {% endblock content %}
