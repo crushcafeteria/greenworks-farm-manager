@@ -14,11 +14,11 @@ def dashboard(request):
     month = datetime.datetime.now().month
 
     context = {
-        'current_weather'    : WeatherData.objects.order_by('-id').first(),
-        'sales_this_month'   : Sales.objects.filter(date__month=month).aggregate(Sum('amount'))['amount__sum'],
-        'total_sales'        : Sales.objects.aggregate(Sum('amount'))['amount__sum'],
+        'current_weather': WeatherData.objects.latest('observation_timestamp'),
+        'sales_this_month': Sales.objects.filter(date__month=month).aggregate(Sum('amount'))['amount__sum'],
+        'total_sales': Sales.objects.aggregate(Sum('amount'))['amount__sum'],
         'expenses_this_month': Expenses.objects.filter(when__month=month).aggregate(Sum('amount'))['amount__sum'],
-        'total_expenses'     : Expenses.objects.aggregate(Sum('amount'))['amount__sum']
+        'total_expenses': Expenses.objects.aggregate(Sum('amount'))['amount__sum']
     }
 
     return render(request, 'dashboard.html', context)
