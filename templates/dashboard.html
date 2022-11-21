@@ -1,42 +1,29 @@
-{% extends 'layout/master.html' %}
+{% extends "layout/master.html" %}
 
 {% block title %}
     Dashboard
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
-    <h1 class="text-muted mb-4">Shortcuts</h1>
-    <div class="row">
-        <div class="col-6 col-lg-3">
-            <div class="card">
-                <a href="{% url 'expenses_create' %}">
-                    <div class="card-body text-center">
-                        <h4 class="mb-3">
-                            <i class="fa fa-money-bill fa-2x"></i>
-                            <br>
-                            Record Expense
-                        </h4>
-                    </div>
-                </a>
+    <div class="col-12">
+        <h3 class="text-muted mb-4">Quick Actions</h3>
+        <div class="row mb-3">
+            <div class="col-6 col-lg-3">
+                {% include 'component/action.html' with label="Expenses" route="expenses_list" icon="money-bill" %}
             </div>
-        </div>
-        <div class="col-6 col-lg-3">
-            <div class="card">
-                <a href={% url 'sales_create' %}#">
-                    <div class="card-body text-center">
-                        <h3 class="mb-3">
-                            <i class="fa fa-shopping-bag fa-2x"></i>
-                            <br>
-                            Record Sale
-                        </h3>
-                    </div>
-                </a>
+            <div class="col-6 col-lg-3">
+                {% include 'component/action.html' with label="Sales" route="sales_list" icon="shopping-bag" %}
             </div>
         </div>
     </div>
-    <br>
 
-    <h1 class="text-muted mb-4">Current Weather</h1>
+    {# Latest weather #}
+    <div class="col-12">
+        <a href="{% url 'weather_list' %}" class="btn btn-outline-primary btn-sm float-end">
+            More <i class="fa fa-arrow-right fa-fw"></i>
+        </a>
+        <h3 class="text-muted mb-4">Latest Weather</h3>
+    </div>
     <div class="row">
         {# Weather description #}
         <div class="col-6 col-lg-3">
@@ -58,9 +45,9 @@
             {% include 'component/widget.html' with label='Relative Humidity' value=current_weather.relative_humidity_formatted %}
         </div>
     </div>
-    <br>
 
-    <h1 class="text-muted mb-4">Financial Summaries</h1>
+    {# Financials #}
+    <h3 class="text-muted mb-4">Financials</h3>
     <div class="row">
         {# Sales this month #}
         <div class="col-6 col-lg-3">
@@ -82,15 +69,15 @@
             {% include 'component/statistic.html' with label='Total Expenses' value=total_expenses %}
         </div>
     </div>
-    <br>
 
-    {# Rainfall trends #}
+    {% comment %} {# Rainfall trends #}
     <h1 class="text-muted mb-4">Rainfall Trends</h1>
 
     {# Temperature trends #}
     <h1 class="text-muted mb-4">Temperature Trends</h1>
 
     {# RH trends #}
-    <h1 class="text-muted mb-4">Humidity Trends</h1>
+    <h1 class="text-muted mb-4">Humidity Trends</h1> {% endcomment %}
+
 
 {% endblock content %}
