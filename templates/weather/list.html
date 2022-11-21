@@ -7,19 +7,10 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-12 my-3">
             <h1 class="h3 mb-3">
                 <i class="fa fa-cloud-rain fa-fw"></i> Weather Databank
             </h1>
-        </div>
-        <div class="col-lg-4">
-            <div class="row">
-                <div class="col">
-                    {% comment %} <a href="{% url 'weather_refresh' %}" class="btn btn-outline-primary float-end btn-sm">
-                        <i class="fa fa-refresh fa-fw"></i> Fetch Data
-                    </a> {% endcomment %}
-                </div>
-            </div>
         </div>
     </div>
 
@@ -30,6 +21,12 @@
 
         <div class="col-12 text-center">
             {% include 'component/messages.html' %}
+        </div>
+
+        <div class="col-12">
+            <h3 class="text-muted">
+                Weather Databank
+            </h3>
         </div>
 
         {% if weatherdata %}
@@ -47,7 +44,7 @@
                         <th>Cloud Ceiling</th>
                         <th colspan="2">12 Hr Precipitation</th>
                     </tr>
-                    {% for data in object_list %}
+                    {% for data in weatherdata %}
                         <tr>
                             <td>{{ data.observation_timestamp }}</td>
                             <td>{{ data.description }}</td>
@@ -70,49 +67,30 @@
             </div>
 
             {# Mobile view #}
-            {% for expense in expenses %}
-                {% comment %} <div class="col-12 d-block d-lg-none">
+            {% for data in weatherdata %}
+                <div class="col-12 d-block d-lg-none mt-3">
                     <div class="card">
                         <div class="card-body">
                             <h6 class="text-muted float-end">
-                                <i class="fa fa-sitemap fa-fw"></i> {{ expense.type }}
+                                <i class="fas fa-map-marker fa-fw"></i> Bukura, KE
                             </h6>
-                            <h4 class="mb-2">{{ expense.name }}</h4>
-                            <h6 class="text-muted float-end">
-                                <i class="fa fa-calendar fa-fw"></i> {{ expense.when }}
+                            <h4 class="mb-2">{{ data.description }}</h4>
+                            <h6 class="text-muted mb-3">
+                                <i class="fas fa-clock fa-fw"></i> {{ data.observation_timestamp }}
                             </h6>
-                            <h6 class="text-primary">Ksh {{ expense.amount|intcomma }}</h6>
-                            <hr>
-                            <p class="card-text">
-                                {% if expense.description %}
-                                    {{ expense.description|truncatechars:150|linebreaks }}
-                                {% else %}
-                                    Not Available
-                                {% endif %}
-                            </p>
-                            {% if expense.valid == 'YES' %}
-                                <span class="text-success float-end pt-2">
-                                    <i class="fa fa-check-circle fa-fw"></i>
-                                </span>
-                            {% else %}
-                                <span class="text-warning float-end pt-2">
-                                    <i class="fa fa-exclamation-triangle fa-fw"></i>
-                                </span>
-                            {% endif %}
-
-                            <a href="{% url 'expenses_details' pk=expense.id %}"
-                               class="btn btn-outline-primary btn-sm">
+                            <a href="#" class="btn btn-outline-primary btn-sm float-end">
                                 <i class="fa fa-info-circle fa-fw"></i> Details
                             </a>
-                            {% if expense.valid == 'NO' %}
-                                <a href="{% url 'expenses_validate' pk=expense.id %}"
-                                   class="btn btn-outline-success btn-sm">
-                                    <i class="fa fa-check-circle fa-fw"></i> Validate
-                                </a>
-                            {% endif %}
+                            <p class="card-text">
+                                RH: {{ data.relative_humidity }}% <br/>
+                                Temp: {{ data.temperature }} <sup>0</sup>C <br/>
+                                Wind Speed: {{ data.wind_speed }} km/hour <br/>
+                                Cloud Cover: {{ data.cloud_cover }}% <br/>
+                                Precipitation: {{ data.precipitation_12_hr }} mm <br/>
+                            </p>
                         </div>
                     </div>
-                </div> {% endcomment %}
+                </div>
             {% endfor %}
 
             {# Pagination #}
